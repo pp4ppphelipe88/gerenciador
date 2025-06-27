@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard do Administrador{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h1 class="h2 mb-4">Dashboard do Administrador</h1>
+
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card text-white bg-primary shadow">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title">Total de Lojas</h5>
+                            <p class="h2 fw-bold">{{ total_lojas }}</p>
+                        </div>
+                        <i class="bi bi-shop display-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card text-white bg-success shadow">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title">Total de Usuários</h5>
+                            <p class="h2 fw-bold">{{ total_usuarios }}</p>
+                        </div>
+                        <i class="bi bi-people-fill display-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card text-white bg-info shadow">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title">Total de Produtos</h5>
+                            <p class="h2 fw-bold">{{ total_produtos }}</p>
+                        </div>
+                        <i class="bi bi-box-seam display-4"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card shadow">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs" id="adminTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="lojas-tab" data-bs-toggle="tab" data-bs-target="#lojas" type="button" role="tab" aria-controls="lojas" aria-selected="true">Gerenciar Lojas</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="usuarios-tab" data-bs-toggle="tab" data-bs-target="#usuarios" type="button" role="tab" aria-controls="usuarios" aria-selected="false">Gerenciar Usuários</button>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="tab-content" id="adminTabContent">
+                <div class="tab-pane fade show active" id="lojas" role="tabpanel" aria-labelledby="lojas-tab">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="mb-0">Lista de Lojas</h4>
+                        <a href="{{ url_for('admin_criar_loja') }}" class="btn btn-primary"><i class="bi bi-plus-circle-fill"></i> Criar Nova Loja</a>
+                    </div>
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Nome da Loja</th>
+                                <th>Nº de Usuários</th>
+                                <th>Nº de Produtos</th>
+                                <th class="text-end">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for loja in lojas %}
+                            <tr>
+                                <td class="fw-bold">{{ loja.nome_loja }}</td>
+                                <td><span class="badge bg-secondary">{{ loja.usuarios|length }}</span></td>
+                                <td><span class="badge bg-secondary">{{ loja.produtos|length }}</span></td>
+                                <td class="text-end">
+                                    <a href="#" class="btn btn-sm btn-outline-secondary" title="Editar Loja"><i class="bi bi-pencil-fill"></i></a>
+                                    <a href="#" class="btn btn-sm btn-outline-danger" title="Excluir Loja"><i class="bi bi-trash-fill"></i></a>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center">Nenhuma loja cadastrada.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="tab-pane fade" id="usuarios" role="tabpanel" aria-labelledby="usuarios-tab">
+                     <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="mb-0">Lista de Usuários</h4>
+                        <a href="{{ url_for('admin_criar_usuario') }}" class="btn btn-primary"><i class="bi bi-person-plus-fill"></i> Criar Novo Usuário</a>
+                    </div>
+                    <table class="table table-hover align-middle">
+                         <thead class="table-light">
+                            <tr>
+                                <th>Nome Completo</th>
+                                <th>Email</th>
+                                <th>Loja</th>
+                                <th>Cargo</th>
+                                <th class="text-end">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for usuario in usuarios %}
+                            <tr>
+                                <td class="fw-bold">{{ usuario.nome_completo }}</td>
+                                <td>{{ usuario.username }}</td>
+                                <td>{{ usuario.loja.nome_loja }}</td>
+                                <td>
+                                    {% if usuario.is_superadmin %}<span class="badge bg-danger">Super Admin</span>{% endif %}
+                                    {% if usuario.is_owner %}<span class="badge bg-warning text-dark">Dono</span>{% endif %}
+                                    {% if not usuario.is_superadmin and not usuario.is_owner %}<span class="badge bg-info text-dark">Membro</span>{% endif %}
+                                </td>
+                                <td class="text-end">
+                                    <a href="#" class="btn btn-sm btn-outline-secondary" title="Editar Usuário"><i class="bi bi-pencil-fill"></i></a>
+                                    <a href="#" class="btn btn-sm btn-outline-danger" title="Excluir Usuário"><i class="bi bi-trash-fill"></i></a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+{% endblock %}

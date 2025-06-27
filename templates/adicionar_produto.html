@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block title %}Adicionar Produto{% endblock %}
+
+{% block content %}
+<h1>Adicionar Novo Produto</h1>
+<form method="POST" class="p-4 border rounded bg-light">
+    <fieldset class="mb-4">
+        <legend>Dados Principais do Produto</legend>
+        <div class="mb-3">
+            <label for="nome" class="form-label">Nome do Produto</label>
+            <input type="text" id="nome" name="nome" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="descricao" class="form-label">Descrição</label>
+            <textarea id="descricao" name="descricao" class="form-control" rows="3"></textarea>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="categoria" class="form-label">Categoria</label>
+                <input type="text" id="categoria" name="categoria" class="form-control">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="preco_base" class="form-label">Preço Base (R$)</label>
+                <input type="number" step="0.01" id="preco_base" name="preco_base" class="form-control" required>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <legend>Variações do Produto (Cor, Tamanho, Estoque)</legend>
+        <div id="variacoes-container">
+            <div class="variacao-item row g-3 align-items-center mb-3 p-3 border rounded">
+                <div class="col-md-3">
+                    <label class="form-label">Cor</label>
+                    <input type="text" name="cor[]" class="form-control" required>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Tamanho</label>
+                    <input type="text" name="tamanho[]" class="form-control" required>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Qtd. Inicial</label>
+                    <input type="number" name="quantidade[]" class="form-control" value="0" required>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Qtd. Mínima</label>
+                    <input type="number" name="quantidade_minima[]" class="form-control" value="5" required>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label d-block">&nbsp;</label>
+                    <button type="button" class="btn btn-danger btn-sm remover-variacao" style="display:none;">Remover</button>
+                </div>
+            </div>
+        </div>
+        <button type="button" id="adicionar-variacao" class="btn btn-secondary mt-2">Adicionar Outra Variação</button>
+    </fieldset>
+
+    <hr>
+    <button type="submit" class="btn btn-primary btn-lg w-100 mt-3">Salvar Produto e Variações</button>
+</form>
+
+<script>
+document.getElementById('adicionar-variacao').addEventListener('click', function() {
+    const container = document.getElementById('variacoes-container');
+    const primeiroItem = container.querySelector('.variacao-item');
+    const novoItem = primeiroItem.cloneNode(true);
+    
+    // Limpa os valores dos inputs clonados
+    novoItem.querySelectorAll('input').forEach(input => input.value = '');
+    // Zera os valores de quantidade
+    novoItem.querySelector('input[name="quantidade[]"]').value = '0';
+    novoItem.querySelector('input[name="quantidade_minima[]"]').value = '5';
+    
+    // Mostra o botão de remover no novo item
+    const btnRemover = novoItem.querySelector('.remover-variacao');
+    btnRemover.style.display = 'inline-block';
+    btnRemover.addEventListener('click', function() {
+        novoItem.remove();
+    });
+    
+    container.appendChild(novoItem);
+});
+
+// Adiciona evento de remoção para botões já existentes (caso a lógica mude)
+document.querySelectorAll('.remover-variacao').forEach(btn => {
+    if (btn.style.display !== 'none') {
+        btn.addEventListener('click', function() {
+            btn.closest('.variacao-item').remove();
+        });
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Minha Equipe{% endblock %}
+{% block content %}
+<h1>Usuários da {{ current_user.loja.nome_loja }}</h1>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nome Completo</th>
+            <th>Email</th>
+            <th>Cargo</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for usuario in usuarios %}
+        <tr>
+            <td>{{ usuario.nome_completo }}</td>
+            <td>{{ usuario.username }}</td>
+            <td>{% if usuario.is_owner %}Dono da Loja{% else %}Membro{% endif %}</td>
+            <td>
+                <button class="btn btn-sm btn-secondary" disabled>Editar</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

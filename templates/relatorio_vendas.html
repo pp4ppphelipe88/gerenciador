@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}Relatório de Vendas Semanais{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="bi bi-calendar-week"></i> Relatório de Vendas</h1>
+</div>
+<p class="text-muted">
+    Exibindo todas as vendas realizadas de <strong>{{ data_inicio.strftime('%d/%m/%Y') }}</strong> até <strong>{{ data_fim.strftime('%d/%m/%Y') }}</strong>.
+</p>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card text-white bg-success shadow">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title">Faturamento no Período</h5>
+                        <p class="h2 fw-bold">R$ {{ "%.2f"|format(total_vendido_valor) }}</p>
+                    </div>
+                    <i class="bi bi-currency-dollar display-4"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card bg-light shadow">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title">Total de Itens Vendidos</h5>
+                        <p class="h2 fw-bold">{{ total_itens_vendidos }} un.</p>
+                    </div>
+                    <i class="bi bi-tags-fill display-4 text-secondary"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="card shadow-sm">
+    <div class="card-header">
+        <h5 class="mb-0">Vendas Detalhadas</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Data & Hora</th>
+                        <th>Produto</th>
+                        <th>Variação</th>
+                        <th class="text-center">Qtd.</th>
+                        <th class="text-end">Preço Unit.</th>
+                        <th class="text-end">Total (R$)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for venda in vendas %}
+                    <tr>
+                        <td>{{ venda.data_hora.strftime('%d/%m/%Y %H:%M') }}</td>
+                        <td class="fw-bold">{{ venda.variacao.produto.nome }}</td>
+                        <td>{{ venda.variacao.cor }} / {{ venda.variacao.tamanho }}</td>
+                        <td class="text-center">{{ venda.quantidade_movimentada|abs }}</td>
+                        <td class="text-end">R$ {{ "%.2f"|format(venda.preco_unitario_movimento or 0) }}</td>
+                        <td class="text-end fw-bold">R$ {{ "%.2f"|format((venda.quantidade_movimentada|abs) * (venda.preco_unitario_movimento or 0)) }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center p-4">
+                            Nenhuma venda registrada nos últimos 7 dias.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

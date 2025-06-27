@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Registrar Nova Loja{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3>Crie sua Conta e sua Loja</h3>
+                <p class="text-muted">O primeiro usuário cadastrado se tornará o dono da loja.</p>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <h5 class="mb-3">Dados da Loja</h5>
+                    <div class="mb-3">
+                        <label for="nome_loja" class="form-label">Nome da Loja</label>
+                        <input type="text" class="form-control" id="nome_loja" name="nome_loja" required>
+                    </div>
+                    
+                    <hr>
+
+                    <h5 class="mb-3">Seus Dados (Dono da Loja)</h5>
+                    <div class="mb-3">
+                        <label for="nome_completo" class="form-label">Seu Nome Completo</label>
+                        <input type="text" class="form-control" id="nome_completo" name="nome_completo" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Seu Email (será seu login)</label>
+                        <input type="email" class="form-control" id="username" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Crie uma Senha</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Registrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

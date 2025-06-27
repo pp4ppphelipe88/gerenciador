@@ -1,0 +1,12 @@
+/* static/css/style.css */
+
+/* Deixa o rodapé do card de login/registro mais sutil */
+.card-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Espaçamento extra para os botões de ação na tabela */
+.table td .btn {
+    margin-right: 5px;
+}

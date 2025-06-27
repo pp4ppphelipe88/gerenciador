@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Ajustar Estoque{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3>Ajustar Estoque</h3>
+            </div>
+            <div class="card-body">
+                <h4>Produto: {{ variacao.produto.nome }}</h4>
+                <p><strong>Variação:</strong> Cor {{ variacao.cor }} / Tamanho {{ variacao.tamanho }}</p>
+                <p><strong>Estoque Atual:</strong> <span class="badge bg-primary fs-5">{{ variacao.quantidade }}</span></p>
+                <hr>
+
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="tipo_movimento" class="form-label">Tipo de Movimento</label>
+                        <select name="tipo_movimento" id="tipo_movimento" class="form-select" required>
+                            <option value="entrada">Entrada (+)</option>
+                            <option value="saida">Saída (-)</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="quantidade" class="form-label">Quantidade</label>
+                        <input type="number" name="quantidade" id="quantidade" class="form-control" min="1" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="observacao" class="form-label">Observação (Ex: Venda, Devolução, Perda)</label>
+                        <input type="text" name="observacao" id="observacao" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Confirmar Ajuste</button>
+                    <a href="{{ url_for('produto_detalhe', id=variacao.produto_id) }}" class="btn btn-secondary w-100 mt-2">Cancelar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

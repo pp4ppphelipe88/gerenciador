@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Criar Nova Loja{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h3>Criar Nova Loja</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="nome_loja" class="form-label">Nome da Loja</label>
+                        <input type="text" class="form-control" id="nome_loja" name="nome_loja" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Criar Loja</button>
+                    <a href="{{ url_for('admin') }}" class="btn btn-secondary w-100 mt-2">Cancelar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

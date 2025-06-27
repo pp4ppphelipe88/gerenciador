@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Leitor de Código de Barras{% endblock %}
+
+{% block content %}
+<div class="container text-center">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <h1 class="mb-3"><i class="bi bi-qr-code-scan"></i> Leitor Mobile</h1>
+            <p class="text-muted">Aponte a câmera para um código de barras de produto.</p>
+            
+            <div id="reader" class="shadow-sm rounded mb-3" style="width: 100%;"></div>
+
+            <div id="result" class="mt-4">
+                <div class="alert alert-info">Aguardando leitura...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+<script>
+// Função para lidar com o sucesso da leitura
+function onScanSuccess(decodedText, decodedResult) {
+    html5QrcodeScanner.clear();
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = `<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Buscando...</span></div> <p>Buscando produto...</p>`;
+
+    fetch(`/api/buscar_por_codigo/${decodedText}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                let productInfoHtml = `
+                <div class="card text-start shadow-sm">
+                    <div class="card-header bg-success text-white"><i class="bi bi-check-circle-fill"></i> Produto Encontrado!</div>
+                    <div class="card-body">
+                        <h5 class="card-title">${data.produto_nome}</h5>
+                        <p class="card-text">
+                            <strong>Variação:</strong> ${data.cor} / ${data.tamanho}<br>
+                            <strong>Estoque Atual:</strong> <span class="badge bg-primary fs-6">${data.quantidade}</span>
+                        </p>
+                        <button type="button" class="btn btn-warning w-100" data-bs-toggle="modal" data-bs-target="#ajusteEstoqueModal" data-variacao-id="${data.variacao_id}" data-product-name="${data.produto_nome} (${data.cor} / ${data.tamanho})">
+                            <i class="bi bi-pencil-square"></i> Ajustar Estoque
+                        </button>
+                    </div>
+                    <div class="card-footer"><a href="#" onclick="reiniciarScanner()" class="btn btn-secondary w-100">Escanear Outro</a></div>
+                </div>`;
+                resultDiv.innerHTML = productInfoHtml;
+            } else {
+                resultDiv.innerHTML = `<div class="alert alert-danger"><strong>Erro:</strong> ${data.message}<hr><a href="#" onclick="reiniciarScanner()" class="btn btn-sm btn-danger">Tentar Novamente</a></div>`;
+            }
+        })
+        .catch(error => {
+            console.error('Erro na requisição:', error);
+            resultDiv.innerHTML = `<div class="alert alert-danger">Ocorreu um erro ao conectar com o servidor.</div>`;
+        });
+}
+
+function reiniciarScanner() { location.reload(); }
+
+let html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: {width: 250, height: 150} }, false);
+html5QrcodeScanner.render(onScanSuccess, (error) => {}); // onScanFailure é ignorado
+</script>
+{% endblock %}
